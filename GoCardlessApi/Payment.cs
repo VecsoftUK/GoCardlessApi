@@ -72,7 +72,6 @@ namespace Vecsoft.GoCardlessApi
 				{ "charge_date", ChargeDate.ToString("yyyy-MM-dd") },
 				{ "currency", Currency },
 				{ "description", Description },
-				{ "reference", Reference }
 				};
 			}
 

@@ -54,7 +54,7 @@ namespace Vecsoft.GoCardlessApi
 
 		public IEnumerable<Mandate> GetMandates(Customer customer)
 			{
-			var Arguments = new Dictionary<String, String>
+			var Arguments = new Dictionary<String, Object>
 				{
 				{ "customer", customer.Id }
 				};
@@ -78,7 +78,7 @@ namespace Vecsoft.GoCardlessApi
 
 		public IEnumerable<Payment> GetPayments(Customer customer)
 			{
-			var Arguments = new Dictionary<String, String>
+			var Arguments = new Dictionary<String, Object>
 				{
 				{ "customer", customer.Id }
 				};
@@ -91,30 +91,33 @@ namespace Vecsoft.GoCardlessApi
 			return PaymentsArray.Cast<JsonObject>().Select(Payment.FromJson);
 			}
 
-		public void CreatePayment(Mandate mandate, Payment payment)
+		public Payment CreatePayment(Mandate mandate, Payment payment)
 			{
 			var Links = new JsonObject();
 			Links.Add("mandate", mandate.Id);
 
-			var Arguments = new Dictionary<String, String>
+			var PaymentObject = payment.ToJson();
+			PaymentObject.Add("links", Links);
+
+			var Arguments = new Dictionary<String, Object>
 				{
-				{ "payments", payment.ToJson().ToString() },
-				{ "links", Links.ToString() }
+				{ "payments", PaymentObject }
 				};
 
 			var Request = CreateRequest(RequestMethod.Post, "payments", Arguments);
 			var ResponseData = ExecuteRequest(Request);
 
-			var PaymentsArray = (JsonArray)ResponseData["payments"];
+			PaymentObject = (JsonObject)ResponseData["payments"];
+			payment = Payment.FromJson(PaymentObject);
 
-			var lol = PaymentsArray.Cast<JsonObject>().Select(Payment.FromJson);
+			return payment;
 			}
 
 		#endregion
 
 		#region CreateRequest(), EndRequest()
 
-		private HttpWebRequest CreateRequest(RequestMethod method, String endpoint, IDictionary<String, String> arguments = null)
+		private HttpWebRequest CreateRequest(RequestMethod method, String endpoint, IDictionary<String, Object> arguments = null)
 			{
 			var Builder = new UriBuilder(new Uri(new Uri(BaseUri), endpoint));
 

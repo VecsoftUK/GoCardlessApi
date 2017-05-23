@@ -9,6 +9,7 @@ namespace GoCardlessTest
 		{
 		private TextBox _DescriptionTextBox;
 		private TextBox _AmountTextBox;
+		private DateTimePicker _ChargeDatePicker;
 
 		public PaymentDialog()
 			{
@@ -23,6 +24,11 @@ namespace GoCardlessTest
 					(
 					new Label { Text = "Amount" },
 					_AmountTextBox = new TextBox()
+					),
+				new TableRow
+					(
+					new Label { Text = "Charge Date" },
+					_ChargeDatePicker = new DateTimePicker()
 					),
 				null
 				)
@@ -55,7 +61,8 @@ namespace GoCardlessTest
 				{
 				Amount = Decimal.Parse(_AmountTextBox.Text),
 				Currency = "GBP",
-				Description = _DescriptionTextBox.Text
+				Description = _DescriptionTextBox.Text,
+				ChargeDate = _ChargeDatePicker.Value.Value
 				};
 
 			Close();
