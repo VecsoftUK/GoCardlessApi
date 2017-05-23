@@ -11,10 +11,20 @@ namespace GoCardlessTest
 		private TextBox _AmountTextBox;
 		private DateTimePicker _ChargeDatePicker;
 
-		public PaymentDialog()
+		public PaymentDialog(Customer customer, Mandate mandate)
 			{
 			var FieldsTable = new TableLayout
 				(
+				new TableRow
+					(
+					new Label { Text = "Customer" },
+					new Label { Text = customer.CompanyName ?? customer.FullName }
+					),
+				new TableRow
+					(
+					new Label { Text = "Mandate" },
+					new Label { Text = mandate.Reference }
+					),
 				new TableRow
 					(
 					new Label { Text = "Description" },
@@ -28,7 +38,7 @@ namespace GoCardlessTest
 				new TableRow
 					(
 					new Label { Text = "Charge Date" },
-					_ChargeDatePicker = new DateTimePicker()
+					_ChargeDatePicker = new DateTimePicker { Mode = DateTimePickerMode.Date }
 					),
 				null
 				)
@@ -53,6 +63,10 @@ namespace GoCardlessTest
 				};
 
 			Padding = new Padding(4);
+
+			// TODO: Need to find a way to hide the checkbox. Setting the value at least ticks it by default.
+			_ChargeDatePicker.Value = mandate.NextPossibleChargeDate;
+			_ChargeDatePicker.MinDate = mandate.NextPossibleChargeDate ?? DateTime.Now.Date;
 			}
 
 		private void HandleOkButtonClick(Object sender, EventArgs e)

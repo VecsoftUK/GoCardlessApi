@@ -19,18 +19,21 @@ namespace GoCardlessTest
 			ClientSize = new Size(800, 600);
 			Title = "GoCardless API Test";
 
-			_CustomerGrid = new GridView { };
+			_CustomerGrid = new GridView { BackgroundColor = SystemColors.WindowBackground };
 			_CustomerGrid.Columns.Add(new GridColumn { HeaderText = "ID", DataCell = new TextBoxCell(nameof(Customer.Id)) });
 			_CustomerGrid.Columns.Add(new GridColumn { HeaderText = "Name", DataCell = new TextBoxCell(nameof(Customer.FullName)) });
 			_CustomerGrid.Columns.Add(new GridColumn { HeaderText = "Company", DataCell = new TextBoxCell(nameof(Customer.CompanyName)) });
+			_CustomerGrid.Columns.Add(new GridColumn { HeaderText = "Email", DataCell = new TextBoxCell(nameof(Customer.Email)) });
+			_CustomerGrid.Columns.Add(new GridColumn { HeaderText = "Created", DataCell = new TextBoxCell(nameof(Customer.CreatedAt)) });
 			_CustomerGrid.SelectedItemsChanged += _CustomerGrid_SelectedItemsChanged;
 
-			_PaymentsGrid = new GridView { };
+			_PaymentsGrid = new GridView { BackgroundColor = SystemColors.WindowBackground };
 			_PaymentsGrid.Columns.Add(new GridColumn { HeaderText = "ID", DataCell = new TextBoxCell(nameof(Payment.Id)) });
 			_PaymentsGrid.Columns.Add(new GridColumn { HeaderText = "Amount", DataCell = new TextBoxCell(nameof(Payment.Amount)) });
 			_PaymentsGrid.Columns.Add(new GridColumn { HeaderText = "ChargeDate", DataCell = new TextBoxCell(nameof(Payment.ChargeDate)) });
 			_PaymentsGrid.Columns.Add(new GridColumn { HeaderText = "Description", DataCell = new TextBoxCell(nameof(Payment.Description)) });
 			_PaymentsGrid.Columns.Add(new GridColumn { HeaderText = "Status", DataCell = new TextBoxCell(nameof(Payment.Status)) });
+			_PaymentsGrid.Columns.Add(new GridColumn { HeaderText = "Created", DataCell = new TextBoxCell(nameof(Payment.CreatedAt)) });
 
 			var PaymentsToolbar = new ToolBar();
 			PaymentsToolbar.Items.Add(new ButtonToolItem(InvokeCreatePayment) { Text = "Create Payment" });
@@ -59,7 +62,7 @@ namespace GoCardlessTest
 			if (Mandate == null)
 				throw new Exception("Customer has no mandate");
 
-			using (var paymentDialog = new PaymentDialog())
+			using (var paymentDialog = new PaymentDialog(Customer, Mandate))
 				{
 				var Payment = paymentDialog.ShowModal();
 
