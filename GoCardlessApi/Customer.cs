@@ -21,6 +21,26 @@ namespace Vecsoft.GoCardlessApi
 		public String CountryCode { get; set; }
 		public String Language { get; set; }
 
+		public String FullName
+			{
+			get
+				{
+				var GivenNameEmpty = String.IsNullOrEmpty(GivenName);
+				var FamilyNameEmpty = String.IsNullOrEmpty(FamilyName);
+
+				if (GivenNameEmpty && FamilyNameEmpty)
+					return String.Empty;
+
+				else if (GivenNameEmpty)
+					return FamilyName;
+
+				else if (FamilyNameEmpty)
+					return GivenName;
+
+				return GivenName + " " + FamilyName;
+				}
+			}
+
 		internal static Customer FromJson(JsonObject data)
 			{
 			return new Customer
