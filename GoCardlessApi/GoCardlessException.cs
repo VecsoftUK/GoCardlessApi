@@ -1,6 +1,7 @@
 ﻿using System;
 using GoCardlessTest;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Vecsoft.GoCardlessApi
 	{
@@ -31,16 +32,19 @@ namespace Vecsoft.GoCardlessApi
 			var Type = ParseType((String)data["type"]);
 
 			var ErrorsArray = (JsonArray)data["errors"];
+			var Errors = ErrorsArray
+				.Cast<JsonObject>()
+				.Select(ValidationError.FromJson)
+				.ToArray();
 
-			// TODO: Parse errors
-
-			List<ValidationError> Errors = new List<ValidationError>();
+			foreach (var error in Errors)
+				Message += Environment.NewLine + error;
 
 			return new GoCardlessException(Message, innerException)
 				{
 				RequestId = (String)data["request_id"],
 				DocumentationUrl = (String)data["documentation_url"],
-				Errors = Errors.ToArray()
+				Errors = Errors
 				};
 			}
 
