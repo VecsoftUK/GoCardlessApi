@@ -12,7 +12,7 @@ namespace GoCardlessTest
 		[STAThread]
 		public static void Main(string[] args)
 			{
-			Context = new Context(TestKey);
+			Context = new Context(ApiAccessMode.Sandbox, TestKey);
 			new Eto.Forms.Application().Run(new MainForm());
 			}
 		}

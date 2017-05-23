@@ -64,6 +64,18 @@ namespace Vecsoft.GoCardlessApi
 				};
 			}
 
+		internal JsonObject ToJson()
+			{
+			return new JsonObject
+				{
+				{ "amount", (Amount * 100).ToString("#0") },
+				{ "charge_date", ChargeDate.ToString("yyyy-MM-dd") },
+				{ "currency", Currency },
+				{ "description", Description },
+				{ "reference", Reference }
+				};
+			}
+
 		private static PaymentStatus ParseStatus(String value)
 			{
 			switch (value)

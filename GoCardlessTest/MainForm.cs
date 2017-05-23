@@ -5,6 +5,7 @@ using Eto.Forms;
 using Eto.Serialization.Xaml;
 using Vecsoft.GoCardlessApi;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GoCardlessTest
 	{
@@ -48,6 +49,16 @@ namespace GoCardlessTest
 
 		private void InvokeCreatePayment(Object sender, EventArgs e)
 			{
+			var Customer = _CustomerGrid.SelectedItem as Customer;
+
+			if (Customer == null)
+				return;
+
+			var Mandate = Program.Context.GetMandates(Customer).FirstOrDefault();
+
+			if (Mandate == null)
+				throw new Exception("Customer has no mandate");
+
 			using (var paymentDialog = new PaymentDialog())
 				{
 				var Payment = paymentDialog.ShowModal();
@@ -55,7 +66,8 @@ namespace GoCardlessTest
 				if (Payment == null)
 					return;
 
-				Program.Context.CreatePayment(Payment);
+				try { Program.Context.CreatePayment(Mandate, Payment); }
+				catch(Exception x) { MessageBox.Show("No: " + x); }
 				}
 			}
 

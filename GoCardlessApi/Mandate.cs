@@ -19,7 +19,7 @@ namespace Vecsoft.GoCardlessApi
 		/// <summary>
 		/// The earliest date a newly created payment for this mandate could be charged.
 		/// </summary>
-		public DateTime NextPossibleChargeDate { get; set; }
+		public DateTime? NextPossibleChargeDate { get; set; }
 
 		/// <summary>
 		/// Boolean value showing whether payments and subscriptions under this mandate require approval via an automated email before being processed.
@@ -43,8 +43,8 @@ namespace Vecsoft.GoCardlessApi
 			return new Mandate
 				{
 				Id = (String)data["id"],
-				CreatedAt = DateTime.ParseExact((String)data["created_at"], "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture, DateTimeStyles.None),
-				NextPossibleChargeDate = DateTime.ParseExact((String)data["next_possible_charge_date"], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None),
+				CreatedAt = ParseUtilities.ParseTimestamp(data["created_at"]),
+				NextPossibleChargeDate = ParseUtilities.ParseNullableDate(data["next_possible_charge_date"]),
 				PaymentsRequireApproval = (Boolean)data["payments_require_approval"],
 				Reference = (String)data["reference"],
 				Scheme = (String)data["scheme"],
